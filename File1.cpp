@@ -13,7 +13,7 @@ std::unique_ptr<TLog_r> p = std::make_unique<TLog_r>();
 
 int plus(const int& A,const int& B)
 {
- p->AddLog("int plus(const int& A,const int& B)","A + B",WARNINGr);
+ p->AddLog("int plus(const int& A,const int& B)","36","A + B",WARNINGr);
  return int(A+B);
 };
 
@@ -28,7 +28,7 @@ int _tmain(int argc, _TCHAR* argv[])
           std::cout << plus(36,41) << std::endl;
 
       p->SetCategorryIn(WARNINGr);
-      p->AddLog("main","Message",WARNINGr);
+      p->AddLog("main","36","Message",WARNINGr);
       p->SaveLog();
 
       std::system("pause");

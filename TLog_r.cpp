@@ -26,7 +26,7 @@ TLog_r::~TLog_r()
 //------------------------------PUBLIC------------------------------------------
 
 //------------------------------------------------------------------------------
-void TLog_r::AddLog(const std::string& PName, const std::string& Message,  const categorry& Cat)
+void TLog_r::AddLog(const std::string& PName, const std::string& PValue, const std::string& Message,  const categorry& Cat)
 {
 
   if (this->Active != true)
@@ -37,20 +37,31 @@ void TLog_r::AddLog(const std::string& PName, const std::string& Message,  const
     switch (Cat)
     {
     case categorry::INFORMATIONr:{
-                                 this->ListInformation.push_back(LogDate{Message,PName, Cat});
+                                 this->ListInformation.push_back(LogDate{Message,PValue,PName, Cat});
                                  break;
                                  };
     case categorry::WARNINGr:{
-                             this->ListWarning.push_back(LogDate{Message,PName, Cat});
+                             this->ListWarning.push_back(LogDate{Message,PValue,PName, Cat});
                              break;
                              };
 
     case categorry::ERRORr:{
-                           this->ListError.push_back(LogDate{Message,PName, Cat});
+                           this->ListError.push_back(LogDate{Message,PValue,PName, Cat});
                            };
 
      default:{};
     };
+};
+
+//------------------------------------------------------------------------------
+void TLog_r::AddLog(std::tuple<std::string,std::string,std::string,categorry>& RTuple)
+{
+  std::string PName    = std::get<0>(RTuple);
+  std::string PValue   = std::get<1>(RTuple);
+  std::string Message  = std::get<2>(RTuple);
+  categorry   cat      = std::get<3>(RTuple);
+
+  this->AddLog(PName,PValue,Message,cat);
 };
 
 //------------------------------------------------------------------------------
@@ -252,6 +263,7 @@ std::string TLog_r::sget_time()
   return result;
 };
 
+//------------------------------------------------------------------------------
 std::string TLog_r::sget_time(const std::time_t& tobj)
 {
 struct tm* tim     = std::localtime(&tobj);
@@ -340,9 +352,6 @@ std::ofstream& operator <<(std::ofstream& out,const std::vector<LogDate>& List)
   return out;
 };
 
-
-
-
 //------------------------------------------------------------------------------
 std::string TLog_r::SaveFormat(const std::vector<LogDate>& List)
 {
@@ -358,4 +367,43 @@ std::string TLog_r::SaveFormat(const std::vector<LogDate>& List)
  return " ";
 };
 
+//------------------------------------------------------------------------------
+std::string  TLog_r::vget(const std::vector<std::tuple<std::string,std::string>>& obj)
+{
+  std::string result = "";
+
+  for (auto& p :obj)
+  {
+   result = result+ std::get<0>(p)+std::string(" = ")+std::get<1>(p)+std::string("\n");
+  };
+  return result;
+};
+
+//------------------------------------------------------------------------------
+std::string  TLog_r::vget(const std::vector<std::tuple<std::string,bool>>& obj)
+{
+  std::string result = "";
+  std::string sbool  = "";
+
+  for (auto& p :obj)
+  {
+   (std::get<1>(p)==true)?sbool = std::string(" true "):sbool = std::string(" false ");
+   result = result+ std::get<0>(p)+std::string(" = ")+sbool+std::string("\n");
+  };
+  return result;
+};
+
+//------------------------------------------------------------------------------
+std::string  TLog_r::vget(const std::vector<std::tuple<std::string,int>>& obj)
+{
+  std::string result = "";
+
+  for (auto& p :obj)
+  {
+   result = result+ std::get<0>(p)+std::string(" = ")+std::to_string(std::get<1>(p))+std::string("\n");
+  };
+  return result;
+};
+
+//------------------------------------------------------------------------------
 

@@ -10,7 +10,6 @@
 
 class TLog_r
 {
-//  std::vector<std::tuple<std::string,int>> ControlProcedure;
   std::string Path;
   categorry   CategorryIn;
   bool        Active;
@@ -29,6 +28,10 @@ static  void         paste_line(std::ostream& out);
 static  std::string  sget_time();
 static  std::string  sget_time(const std::time_t& tobj);
 
+static  std::string  vget(const std::vector<std::tuple<std::string,std::string>>& obj);
+static  std::string  vget(const std::vector<std::tuple<std::string,bool>>& obj);
+static  std::string  vget(const std::vector<std::tuple<std::string,int>>& obj);
+
 
   friend std::ofstream& operator<<(std::ofstream& out,const std::vector<LogDate>& List);
   std::string  SaveFormat(const std::vector<LogDate>& List);
@@ -39,8 +42,8 @@ public:
   TLog_r(const std::string& SaveLog);
   ~TLog_r();
 
-//  void         AddControl(const std::string& ProcedureName, const int& ProcedureID);
-  void         AddLog(const std::string& PName,const std::string& Message,  const categorry& cat);
+  void         AddLog(const std::string& PName, const std::string& PValue, const std::string& Message,  const categorry& cat);
+  void         AddLog(std::tuple<std::string,std::string,std::string,categorry>& RTuple);
 
   void         SaveLog();
   void         SaveLog(const std::string& Path);
